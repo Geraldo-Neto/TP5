@@ -162,7 +162,7 @@ class Veiculo(threading.Thread):
 
 	def run(self):
 		self.running = True
-		threading.Thread(target = receiveMsg, args = (self.tcp,)).start()
+		threading.Thread(target = self.receiveMsg, args = (self.tcp,)).start()
 		while self.running:
 			self.receiveMsgTCP()
 			self.verificaCurvas()
