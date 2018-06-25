@@ -11,6 +11,7 @@ screen.blit(bg, [0, 0])
 pygame.display.flip()
 rect = pygame.Rect(50, 50, 50, 50)
 clock = pygame.time.Clock()
+print("oi")
 
 
 def main():
