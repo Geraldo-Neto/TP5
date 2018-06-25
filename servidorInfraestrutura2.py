@@ -20,6 +20,7 @@ def handleClient(client, uname):
     while clientConnected:
         try:
             msg = client.recv(1024).decode('ascii')
+            print(msg)
             for k,v in clients.items():
             	v.send(msg.encode('ascii'))
            
