@@ -148,8 +148,21 @@ class Veiculo(threading.Thread):
 		except ValueError:
 			print("Error")
 
+	def receiveMsg(sock):
+	    serverDown = False
+	    while self.running and (not serverDown):
+	        try:
+	            msg = sock.recv(1024).decode('ascii')
+	            print(msg)
+	        except:
+	            print('Server is Down. You are now Disconnected. Press enter to exit...')
+	            serverDown = True
+
+
+
 	def run(self):
 		self.running = True
+		threading.Thread(target = receiveMsg, args = (self.tcp,)).start()
 		while self.running:
 			self.receiveMsgTCP()
 			self.verificaCurvas()
