@@ -131,32 +131,26 @@ class Veiculo(threading.Thread):
 		elif self.posicaoInicial == 4 and self.posicaoFinal == 2:
 			self.moveY()
 
-	def receiveMsgTCP(self):
 
-		try:
-			#print(self.tcp.recv(1024).decode())
-			msg = "1/freia/200"
-			id, comando, distancia = msg.split("/")
-			comando = "acelera"
-			id = 1
-			distancia = 200
-			if id == self.threadID:
-				if comando == "acelera":
-					self.acelera()
-				elif comando == "freia":
-					self.freia(distancia)
-		except ValueError:
-			print("Error")
+	def receiveMsg(self, sock):
+		serverDown = False
+		while self.running and (not serverDown):
+			try:
+				msg = sock.recv(1024).decode('ascii')
+				print(msg)
+				id, comando, distancia = msg.split("/")
+				comando = "acelera"
+				id = 1
+				distancia = 200
+				if id == self.threadID:
+					if comando == "acelera":
+						self.acelera()
+					elif comando == "freia":
+						self.freia(distancia)
 
-	def receiveMsg(sock):
-	    serverDown = False
-	    while self.running and (not serverDown):
-	        try:
-	            msg = sock.recv(1024).decode('ascii')
-	            print(msg)
-	        except:
-	            print('Server is Down. You are now Disconnected. Press enter to exit...')
-	            serverDown = True
+			except:
+				print('Server is Down. You are now Disconnected. Press enter to exit...')
+				#serverDown = True
 
 
 
@@ -164,7 +158,6 @@ class Veiculo(threading.Thread):
 		self.running = True
 		threading.Thread(target = self.receiveMsg, args = (self.tcp,)).start()
 		while self.running:
-			self.receiveMsgTCP()
 			self.verificaCurvas()
 			self.verificaLimites()
 			self.verificaLimiteVelocidade()
@@ -179,18 +172,3 @@ class Veiculo(threading.Thread):
 	def __str__(self):
 		return str(self.threadID) + "/" + str(self.getPosicao()[0]) + "/" + str(self.getPosicao()[1])
 		#return "Veiculo " + str(self.threadID) + ": " + str(self.getPosicao()) + "\n"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
